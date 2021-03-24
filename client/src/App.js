@@ -5,9 +5,16 @@ import { ToastContainer } from 'react-toastify';
 
 import Footer from './components/Footer';
 import Header from './components/Header';
-import HomeScreen from './screens/HomeScreen';
-import ProductScreen from './screens/ProductScreen';
-import CartScreen from './screens/CartScreen';
+
+import {
+  CartScreen,
+  HomeScreen,
+  LoginScreen,
+  ProductScreen,
+  ProfileScreen,
+  RegisterScreen,
+  ShippingScreen,
+} from './screens';
 
 const App = () => {
   return (
@@ -17,8 +24,12 @@ const App = () => {
         <Container>
           <Switch>
             <Route exact path='/' component={HomeScreen} />
+            <Route exact path='/login' component={LoginScreen} />
+            <Route exact path='/register' component={RegisterScreen} />
+            <Route exact path='/profile' component={ProfileScreen} />
             <Route exact path='/product/:id' component={ProductScreen} />
             <Route exact path='/cart/:id?' component={CartScreen} />
+            <Route exact path='/shipping' component={ShippingScreen} />
           </Switch>
         </Container>
       </main>

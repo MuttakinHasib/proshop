@@ -17,7 +17,10 @@ import { addToCart, removeFromCart } from '../redux/actions/cartActions';
 
 const CartScreen = ({ match, location, history }) => {
   const dispatch = useDispatch();
-  const { cartItems } = useSelector(state => state.cart);
+  const {
+    cart: { cartItems },
+    userLogin: { user },
+  } = useSelector(state => ({ ...state }));
   const [quantity, setQuantity] = useState(1);
 
   const productId = match.params.id;
@@ -29,7 +32,8 @@ const CartScreen = ({ match, location, history }) => {
     }
   }, [dispatch, qty, productId]);
 
-  const checkoutHandler = () => {};
+  const checkoutHandler = () =>
+    !user ? history.push('/login') : history.push('/shipping');
 
   return (
     <Row>
