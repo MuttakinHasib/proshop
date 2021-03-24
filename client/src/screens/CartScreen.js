@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Alert,
   Button,
@@ -21,7 +21,7 @@ const CartScreen = ({ match, location, history }) => {
     cart: { cartItems },
     userLogin: { user },
   } = useSelector(state => ({ ...state }));
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
 
   const productId = match.params.id;
   const qty = location.search ? Number(location.search.split('=')[1]) : 1;
