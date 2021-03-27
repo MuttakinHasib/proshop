@@ -10,6 +10,9 @@ import {
   CartScreen,
   HomeScreen,
   LoginScreen,
+  OrderScreen,
+  PaymentScreen,
+  PlaceOrderScreen,
   ProductScreen,
   ProfileScreen,
   RegisterScreen,
@@ -30,6 +33,9 @@ const App = () => {
             <Route exact path='/product/:id' component={ProductScreen} />
             <Route exact path='/cart/:id?' component={CartScreen} />
             <Route exact path='/shipping' component={ShippingScreen} />
+            <Route exact path='/payment' component={PaymentScreen} />
+            <Route exact path='/placeorder' component={PlaceOrderScreen} />
+            <Route exact path='/order/:id' component={OrderScreen} />
           </Switch>
         </Container>
       </main>
