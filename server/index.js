@@ -19,6 +19,8 @@ app.use(express.json());
 
 // Routes
 
+console.log(typeof process.env.STRIPE_SECRET);
+
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);

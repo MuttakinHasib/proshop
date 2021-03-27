@@ -4,9 +4,9 @@ import { Alert, Button, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import CheckoutSteps from '../components/CheckoutSteps';
+import StripeCheckout from 'react-stripe-checkout';
 import Loader from '../components/Loader';
-import { getOrderDetails } from '../redux/actions/orderActions';
+import { getOrderDetails, stripePayment } from '../redux/actions/orderActions';
 
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
@@ -17,6 +17,15 @@ const OrderScreen = ({ match }) => {
   useEffect(() => {
     dispatch(getOrderDetails(orderId));
   }, [dispatch, orderId]);
+
+  const onToken = token => {
+    const payload = {
+      amount: order?.totalPrice,
+      shippingAddress: order?.shippingAddress,
+      token,
+    };
+    dispatch(stripePayment(payload));
+  };
 
   return loading ? (
     <Loader />
@@ -144,14 +153,19 @@ const OrderScreen = ({ match }) => {
               </Row>
             </ListGroup.Item>
             <ListGroup.Item>
-              <Button
-                variant='primary'
-                className='btn-block'
-                type='button'
-                // onClick={placeOrderHandler}
-              >
-                Place Order
-              </Button>
+              <StripeCheckout
+                label='Pay now'
+                name='Proshop'
+                // billingAddress
+                // shoppingAddress
+                image='https://stripe.com/img/documentation/checkout/marketplace.png'
+                description={`Total price is  $${order?.totalPrice}`}
+                amount={order?.totalPrice * 100}
+                panelLabel='Pay'
+                email={order?.user?.email}
+                token={onToken}
+                stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}
+              />
             </ListGroup.Item>
           </ListGroup>
         </Col>
