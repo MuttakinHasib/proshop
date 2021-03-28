@@ -4,6 +4,7 @@ import {
   ORDER_CREATE_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
+  ORDER_DETAILS_RESET,
   ORDER_DETAILS_SUCCESS,
   ORDER_PAY_FAIL,
   ORDER_PAY_REQUEST,
@@ -11,7 +12,11 @@ import {
   ORDER_PAY_SUCCESS,
   STRIPE_PAYMENT_FAIL,
   STRIPE_PAYMENT_REQUEST,
+  STRIPE_PAYMENT_RESET,
   STRIPE_PAYMENT_SUCCESS,
+  USER_ORDERS_LIST_FAIL,
+  USER_ORDERS_LIST_REQUEST,
+  USER_ORDERS_LIST_SUCCESS,
 } from '../actions/type';
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -48,6 +53,8 @@ export const orderDetailsReducer = (
       };
     case ORDER_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    case ORDER_DETAILS_RESET:
+      return {};
 
     default:
       return state;
@@ -63,9 +70,12 @@ export const stripePaymentReducer = (state = {}, action) => {
         loading: false,
         error: null,
         success: true,
+        paymentResult: action.payload,
       };
     case STRIPE_PAYMENT_FAIL:
       return { loading: false, error: action.payload };
+    case STRIPE_PAYMENT_RESET:
+      return {};
 
     default:
       return state;
@@ -86,6 +96,24 @@ export const orderPayReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case ORDER_PAY_RESET:
       return {};
+
+    default:
+      return state;
+  }
+};
+
+export const userOrdersListReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_ORDERS_LIST_REQUEST:
+      return { loading: true };
+    case USER_ORDERS_LIST_SUCCESS:
+      return {
+        loading: false,
+        error: null,
+        orders: action.payload,
+      };
+    case USER_ORDERS_LIST_FAIL:
+      return { loading: false, error: action.payload };
 
     default:
       return state;

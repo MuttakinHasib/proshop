@@ -12,6 +12,9 @@ import {
   STRIPE_PAYMENT_FAIL,
   STRIPE_PAYMENT_REQUEST,
   STRIPE_PAYMENT_SUCCESS,
+  USER_ORDERS_LIST_FAIL,
+  USER_ORDERS_LIST_REQUEST,
+  USER_ORDERS_LIST_SUCCESS,
 } from './type';
 
 export const createOrder = order => async (dispatch, getState) => {
@@ -71,7 +74,7 @@ export const stripePayment = payment => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.REACT_APP_STRIPE_SECRET_KEY}`,
+        Authorization: `Bearer ${user.token}`,
       },
     };
     const { data } = await axios.post(`/api/orders/payment`, payment, config);
@@ -102,8 +105,8 @@ export const payOrder = (orderId, paymentResult) => async (
         Authorization: `Bearer ${user.token}`,
       },
     };
-    const { data } = await axios.post(
-      `/api/orders/${orderId}/pay`,
+    const { data } = await axios.put(
+      `/api/orders/${orderId}/paid`,
       paymentResult,
       config
     );
@@ -112,6 +115,31 @@ export const payOrder = (orderId, paymentResult) => async (
   } catch (err) {
     dispatch({
       type: ORDER_PAY_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const getUserOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_ORDERS_LIST_REQUEST });
+    const { user } = getState().userLogin;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    const { data } = await axios.get(`/api/orders/userOrders`, config);
+
+    dispatch({ type: USER_ORDERS_LIST_SUCCESS, payload: data });
+  } catch (err) {
+    dispatch({
+      type: USER_ORDERS_LIST_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message

@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Form, Row, Table } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { LinkContainer } from 'react-router-bootstrap';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
+import { getUserOrders } from '../redux/actions/orderActions';
 import {
   getUserDetails,
   updateUserProfile,
@@ -14,6 +16,9 @@ const ProfileScreen = ({ history, location }) => {
   const { user: userInfo } = useSelector(state => state.userLogin);
   const { loading, error, user } = useSelector(state => state.userDetails);
   const { success } = useSelector(state => state.userProfileUpdate);
+  const { orders, loading: loadingOrders, error: errorOrders } = useSelector(
+    state => state.userOrdersList
+  );
   const { register: registerHandler, handleSubmit } = useForm();
 
   error && toast.error(error);
@@ -25,9 +30,11 @@ const ProfileScreen = ({ history, location }) => {
     } else {
       if (!user) {
         dispatch(getUserDetails('profile'));
+        dispatch(getUserOrders());
       }
     }
   }, [dispatch, history, userInfo, user]);
+  useEffect(() => dispatch(getUserOrders()), [dispatch]);
 
   const onSubmit = ({ name, email, password, confirmPassword }) => {
     if (password !== confirmPassword) {
@@ -41,7 +48,7 @@ const ProfileScreen = ({ history, location }) => {
 
   return (
     <Row>
-      <Col md={4}>
+      <Col md={3}>
         <h1>Dashboard</h1>
         {loading && <Loader />}
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -88,8 +95,64 @@ const ProfileScreen = ({ history, location }) => {
           </Button>
         </Form>
       </Col>
-      <Col md={8}>
+      <Col md={9}>
         <h2>My Orders</h2>
+        {loadingOrders ? (
+          <Loader />
+        ) : errorOrders ? (
+          <Alert variant='danger'>
+            <h6 className='mb-0'>{errorOrders}</h6>
+          </Alert>
+        ) : orders?.length === 0 ? (
+          <Alert variant='warning'>
+            <h6 className='mb-0'>Your orders list is empty</h6>
+          </Alert>
+        ) : (
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            className='table-sm text-center'
+          >
+            <thead>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Paid</th>
+              <th>Delivered</th>
+              <th></th>
+            </thead>
+            <tbody>
+              {orders?.map(order => (
+                <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>${order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <i className='fas fa-times' style={{ color: '#f36' }}></i>
+                    )}
+                  </td>
+                  <td>
+                    {order.isDelivered ? (
+                      order.deliveredAt.substring(0, 10)
+                    ) : (
+                      <i className='fas fa-times' style={{ color: '#f36' }}></i>
+                    )}
+                  </td>
+                  <td>
+                    <LinkContainer to={`/order/${order._id}`}>
+                      <Button variant='light'>Details</Button>
+                    </LinkContainer>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Col>
     </Row>
   );

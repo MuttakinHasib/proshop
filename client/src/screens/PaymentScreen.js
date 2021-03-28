@@ -20,7 +20,6 @@ const PaymentScreen = ({ history }) => {
 
   const onSubmit = async data => {
     try {
-      console.log(data);
       dispatch(savePaymentMethod(data.paymentMethod));
       history.push('/placeorder');
     } catch (err) {
@@ -36,7 +35,7 @@ const PaymentScreen = ({ history }) => {
           <Form.Group controlId='address'>
             <Form.Label as='legend'>Select Method</Form.Label>
             <Col>
-              <Form.Check
+              {/* <Form.Check
                 type='radio'
                 label='PayPal or Credit Card'
                 id='PayPal'
@@ -44,7 +43,7 @@ const PaymentScreen = ({ history }) => {
                 value='PayPal'
                 checked
                 ref={register}
-              ></Form.Check>
+              ></Form.Check> */}
               <Form.Check
                 type='radio'
                 label='Stripe'
@@ -52,6 +51,7 @@ const PaymentScreen = ({ history }) => {
                 name='paymentMethod'
                 value='Stripe'
                 ref={register}
+                checked
               ></Form.Check>
             </Col>
           </Form.Group>

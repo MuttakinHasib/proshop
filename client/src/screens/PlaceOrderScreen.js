@@ -11,6 +11,7 @@ import { createOrder } from '../redux/actions/orderActions';
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cart);
+  const { user } = useSelector(state => state.userLogin);
   const { order, success, error, loading } = useSelector(
     state => state.orderCreate
   );
@@ -29,7 +30,7 @@ const PlaceOrderScreen = ({ history }) => {
     Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)
   );
 
-  const placeOrderHandler = () =>
+  const placeOrderHandler = () => {
     dispatch(
       createOrder({
         orderItems: cart.cartItems,
@@ -41,6 +42,7 @@ const PlaceOrderScreen = ({ history }) => {
         totalPrice: cart.totalPrice,
       })
     );
+  };
 
   useEffect(() => {
     if (success) {
@@ -59,14 +61,11 @@ const PlaceOrderScreen = ({ history }) => {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Name: {cart?.user?.name}</strong>
+                <strong>Name: {user?.name}</strong>
               </p>
               <p>
                 <strong>
-                  Email:{' '}
-                  <a href={`mailto:${cart?.user?.email}`}>
-                    {cart?.user?.email}
-                  </a>
+                  Email: <a href={`mailto:${user?.email}`}>{user?.email}</a>
                 </strong>
               </p>
               <p>

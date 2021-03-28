@@ -1,31 +1,61 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { Alert, Button, Col, Image, ListGroup, Row } from 'react-bootstrap';
+import { Alert, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import StripeCheckout from 'react-stripe-checkout';
 import Loader from '../components/Loader';
-import { getOrderDetails, stripePayment } from '../redux/actions/orderActions';
+import {
+  getOrderDetails,
+  stripePayment,
+  payOrder,
+} from '../redux/actions/orderActions';
+import { ORDER_PAY_RESET, STRIPE_PAYMENT_RESET } from '../redux/actions/type';
+import { resetCart } from '../redux/actions/cartActions';
 
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
   const dispatch = useDispatch();
   const { order, loading, error } = useSelector(state => state.orderDetails);
+  const { success } = useSelector(state => state.orderPay);
+  const {
+    paymentResult,
+    success: successPay,
+    // error: stripeError,
+  } = useSelector(state => state.stripePayment);
+
   const addDecimals = num => (Math.round(num * 100) / 100).toFixed(2);
 
   useEffect(() => {
     dispatch(getOrderDetails(orderId));
+    dispatch(resetCart());
   }, [dispatch, orderId]);
+
+  useEffect(() => {
+    dispatch({ type: ORDER_PAY_RESET });
+    if (!order || success) {
+      dispatch(getOrderDetails(orderId));
+    }
+  }, [dispatch, orderId, order, success]);
+
+  useEffect(() => {
+    if (order && !order?.isPaid && successPay) {
+      dispatch({ type: STRIPE_PAYMENT_RESET });
+      dispatch(payOrder(orderId, paymentResult));
+    }
+  }, [dispatch, order, orderId, paymentResult, successPay]);
 
   const onToken = token => {
     const payload = {
-      amount: order?.totalPrice,
+      amount: Math.floor(order?.totalPrice) * 100,
       shippingAddress: order?.shippingAddress,
       token,
     };
     dispatch(stripePayment(payload));
   };
+
+  success && toast.success('Payment success');
 
   return loading ? (
     <Loader />
@@ -152,21 +182,23 @@ const OrderScreen = ({ match }) => {
                 <Col>${order?.totalPrice}</Col>
               </Row>
             </ListGroup.Item>
-            <ListGroup.Item>
-              <StripeCheckout
-                label='Pay now'
-                name='Proshop'
-                // billingAddress
-                // shoppingAddress
-                image='https://stripe.com/img/documentation/checkout/marketplace.png'
-                description={`Total price is  $${order?.totalPrice}`}
-                amount={order?.totalPrice * 100}
-                panelLabel='Pay'
-                email={order?.user?.email}
-                token={onToken}
-                stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}
-              />
-            </ListGroup.Item>
+            {!order?.isPaid && (
+              <ListGroup.Item>
+                <StripeCheckout
+                  label='Pay now'
+                  name='Proshop'
+                  // billingAddress
+                  // shoppingAddress
+                  image='https://stripe.com/img/documentation/checkout/marketplace.png'
+                  description={`Total price is  $${order?.totalPrice}`}
+                  amount={order?.totalPrice * 100}
+                  panelLabel='Pay'
+                  email={order?.user?.email}
+                  token={onToken}
+                  stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}
+                />
+              </ListGroup.Item>
+            )}
           </ListGroup>
         </Col>
       </Row>

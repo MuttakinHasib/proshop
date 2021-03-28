@@ -3,10 +3,12 @@ import { v4 as uuid } from 'uuid';
 import asyncHandler from 'express-async-handler';
 import Order from '../models/Order.js';
 
-const secret = process.env.STRIPE_SECRET;
+const secretKey = process.env.STRIPE_SECRET;
+
 const stripe = new Stripe(
-  'sk_test_51IZiatGtB6p6nHNadpInK46iOYnMTFnmIvM0E4rXaYd6NorelcsNW8JGjdkTzHLXPfu9SCgphsF0Q77YFiDjbMPP00XD1BDUuV'
+  `sk_test_51IZiatGtB6p6nHNadpInK46iOYnMTFnmIvM0E4rXaYd6NorelcsNW8JGjdkTzHLXPfu9SCgphsF0Q77YFiDjbMPP00XD1BDUuV`
 );
+// const stripe = new Stripe(secretKey); //! same problem with this
 
 export const addOrderItems = asyncHandler(async (req, res) => {
   const {
@@ -55,31 +57,25 @@ export const getOrderById = asyncHandler(async (req, res) => {
 });
 
 export const stripePayment = asyncHandler(async (req, res) => {
-  console.log(req.body);
-  const { amount, shippingAddress, token } = req.body;
-
-  // const customer = await stripe.customers.create({
-  //   email: token.email,
-  //   source: token.id,
-  // });
-
+  const { amount, token } = req.body;
   const idempotencyKey = uuid();
-
   const payment = await stripe.charges.create(
     {
       source: token.id,
-      amount: amount * 100,
+      amount: amount,
       currency: 'usd',
       receipt_email: token.email,
-      description: `Total price ${amount * 100}`,
+      description: `Total price ${amount}`,
     },
     { idempotencyKey }
   );
 
-  // console.log(payment);
-
   if (payment) {
-    res.json(payment);
+    res.json({
+      id: payment.id,
+      status: payment.status,
+      email_address: payment.receipt_email,
+    });
   } else {
     res.status(400);
     throw new Error('Something went wrong');
@@ -92,10 +88,25 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
   if (order) {
     order.isPaid = true;
     order.paidAt = Date.now();
-    // order.paymentResult = {
-    //   id: req.body.id;
-    //   status: req.body.status
-    // }
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      email_address: req.body.email_address,
+    };
+
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+});
+
+export const getUserOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id });
+
+  if (orders) {
+    res.json(orders);
   } else {
     res.status(404);
     throw new Error('Order not found');
