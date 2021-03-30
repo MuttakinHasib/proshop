@@ -24,17 +24,17 @@ const ProfileScreen = ({ history, location }) => {
   error && toast.error(error);
   success && toast.success('Successfully updated');
 
+  useEffect(() => dispatch(getUserOrders()), [dispatch]);
+
   useEffect(() => {
     if (!userInfo) {
       history.push('/login');
     } else {
       if (!user) {
         dispatch(getUserDetails('profile'));
-        dispatch(getUserOrders());
       }
     }
-  }, [dispatch, history, userInfo, user]);
-  useEffect(() => dispatch(getUserOrders()), [dispatch]);
+  }, [dispatch, user, userInfo, history, orders]);
 
   const onSubmit = ({ name, email, password, confirmPassword }) => {
     if (password !== confirmPassword) {
@@ -116,12 +116,14 @@ const ProfileScreen = ({ history, location }) => {
             className='table-sm text-center'
           >
             <thead>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Total</th>
-              <th>Paid</th>
-              <th>Delivered</th>
-              <th></th>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Delivered</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
               {orders?.map(order => (

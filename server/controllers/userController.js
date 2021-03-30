@@ -5,7 +5,6 @@ import User from '../models/User.js';
 export const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  console.log(email, password);
 
   if (user && (await user.matchPassword(password))) {
     res.json({
@@ -79,6 +78,62 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       email: updateUser.email,
       isAdmin: updateUser.isAdmin,
       token: generateToken(updateUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+export const getUsers = asyncHandler(async (req, res) => {
+  const user = await User.find({});
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('Users not found');
+  }
+});
+
+export const deleteUser = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
+
+  if (user) {
+    await user.remove();
+    res.json({ message: 'User removed' });
+  } else {
+    res.status(404);
+    throw new Error('Users not found');
+  }
+});
+
+export const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select('-password');
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+export const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  console.log(req.body.isAdmin);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin;
+
+    const updateUser = await user.save();
+    res.json({
+      _id: updateUser._id,
+      name: updateUser.name,
+      email: updateUser.email,
+      isAdmin: updateUser.isAdmin,
     });
   } else {
     res.status(404);

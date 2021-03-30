@@ -16,6 +16,7 @@ import {
   STRIPE_PAYMENT_SUCCESS,
   USER_ORDERS_LIST_FAIL,
   USER_ORDERS_LIST_REQUEST,
+  USER_ORDERS_LIST_RESET,
   USER_ORDERS_LIST_SUCCESS,
 } from '../actions/type';
 
@@ -102,7 +103,7 @@ export const orderPayReducer = (state = {}, action) => {
   }
 };
 
-export const userOrdersListReducer = (state = {}, action) => {
+export const userOrdersListReducer = (state = { orders: [] }, action) => {
   switch (action.type) {
     case USER_ORDERS_LIST_REQUEST:
       return { loading: true };
@@ -114,6 +115,8 @@ export const userOrdersListReducer = (state = {}, action) => {
       };
     case USER_ORDERS_LIST_FAIL:
       return { loading: false, error: action.payload };
+    case USER_ORDERS_LIST_RESET:
+      return { orders: [] };
 
     default:
       return state;
