@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
-import { Alert, Col, Image, ListGroup, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,11 +10,13 @@ import {
   getOrderDetails,
   stripePayment,
   payOrder,
+  deliverOrder,
 } from '../redux/actions/orderActions';
 import {
   ORDER_PAY_RESET,
   STRIPE_PAYMENT_RESET,
   ORDER_DETAILS_RESET,
+  ORDER_DELIVER_RESET,
 } from '../redux/actions/type';
 import { resetCart } from '../redux/actions/cartActions';
 
@@ -24,6 +26,9 @@ const OrderScreen = ({ match, history }) => {
   const { user } = useSelector(state => state.userLogin);
   const { order, loading, error } = useSelector(state => state.orderDetails);
   const { success } = useSelector(state => state.orderPay);
+  const { success: deliveredSuccess } = useSelector(
+    state => state.orderDeliver
+  );
   const {
     paymentResult,
     success: successPay,
@@ -44,11 +49,13 @@ const OrderScreen = ({ match, history }) => {
 
   useEffect(() => {
     dispatch({ type: ORDER_PAY_RESET });
-    if (success) {
+    dispatch({ type: ORDER_DELIVER_RESET });
+    if (success || deliveredSuccess) {
       dispatch(getOrderDetails(orderId));
     }
-  }, [dispatch, orderId, order, success]);
+  }, [dispatch, orderId, order, success, deliveredSuccess]);
 
+  // Side effect for stripe payment
   useEffect(() => {
     if (order && !order?.isPaid && successPay) {
       dispatch({ type: STRIPE_PAYMENT_RESET });
@@ -56,6 +63,7 @@ const OrderScreen = ({ match, history }) => {
     }
   }, [dispatch, order, orderId, paymentResult, successPay]);
 
+  // Stripe payment Handler
   const onToken = token => {
     const payload = {
       amount: Math.floor(order?.totalPrice) * 100,
@@ -63,6 +71,11 @@ const OrderScreen = ({ match, history }) => {
       token,
     };
     dispatch(stripePayment(payload));
+  };
+
+  // Order Delivered Handler
+  const deliveredHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   success && toast.success('Payment success');
@@ -207,6 +220,13 @@ const OrderScreen = ({ match, history }) => {
                   token={onToken}
                   stripeKey={process.env.REACT_APP_STRIPE_PUBLIC_KEY}
                 />
+              </ListGroup.Item>
+            )}
+            {!order?.isDelivered && user?.isAdmin && order?.isPaid && (
+              <ListGroup.Item>
+                <Button variant='primary' onClick={deliveredHandler}>
+                  Mark as delivered
+                </Button>
               </ListGroup.Item>
             )}
           </ListGroup>

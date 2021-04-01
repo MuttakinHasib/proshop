@@ -6,6 +6,9 @@ import {
   ORDER_CREATE_FAIL,
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
+  ORDER_DELIVER_FAIL,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
@@ -118,6 +121,31 @@ export const payOrder = (orderId, paymentResult) => async (
   } catch (err) {
     dispatch({
       type: ORDER_PAY_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const deliverOrder = order => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_DELIVER_REQUEST });
+    const { user } = getState().userLogin;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    await axios.put(`/api/orders/${order._id}/deliver`, {}, config);
+
+    dispatch({ type: ORDER_DELIVER_SUCCESS });
+  } catch (err) {
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message

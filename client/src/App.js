@@ -32,6 +32,7 @@ const App = () => {
         <Container>
           <Switch>
             <Route exact path='/' component={HomeScreen} />
+            <Route exact path='/search/:keyword' component={HomeScreen} />
             <Route exact path='/login' component={LoginScreen} />
             <Route exact path='/register' component={RegisterScreen} />
             <Route exact path='/profile' component={ProfileScreen} />
@@ -57,7 +58,11 @@ const App = () => {
               path='/admin/product/:id/edit'
               component={ProductEditScreen}
             />
-            <Route exact path='/admin/orderslist' component={OrdersListScreen} />
+            <Route
+              exact
+              path='/admin/orderslist'
+              component={OrdersListScreen}
+            />
           </Switch>
         </Container>
       </main>
