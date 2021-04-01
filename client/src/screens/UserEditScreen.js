@@ -15,11 +15,18 @@ const UserEditScreen = ({ match, history }) => {
 
   const userId = match.params.id;
   const dispatch = useDispatch();
+  const { user: userInfo } = useSelector(state => state.userLogin);
   const { loading, error, user } = useSelector(state => state.userDetails);
   const { success: updateSuccess } = useSelector(state => state.userUpdate);
 
   error && toast.error(error);
   updateSuccess && toast.success('User updated');
+
+  useEffect(() => {
+    if (!userInfo || !userInfo?.isAdmin) {
+      history.push('/login');
+    }
+  }, [history, userInfo]);
 
   useEffect(() => {
     if (updateSuccess) {

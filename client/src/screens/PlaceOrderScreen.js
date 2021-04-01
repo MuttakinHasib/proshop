@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Loader from '../components/Loader';
 import { createOrder } from '../redux/actions/orderActions';
+import { ORDER_CREATE_RESET } from '../redux/actions/type';
 
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -45,11 +46,12 @@ const PlaceOrderScreen = ({ history }) => {
   };
 
   useEffect(() => {
+    dispatch({ type: ORDER_CREATE_RESET });
     if (success) {
       history.push(`/order/${order._id}`);
     }
     // eslint-disable-next-line
-  }, [history, success]);
+  }, [dispatch, history, success]);
 
   return (
     <>

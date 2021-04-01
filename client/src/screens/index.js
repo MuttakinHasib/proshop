@@ -13,3 +13,6 @@ export { default as ProfileScreen } from './ProfileScreen';
 
 export { default as UserListScreen } from './UserListScreen';
 export { default as UserEditScreen } from './UserEditScreen';
+
+export { default as ProductsListScreen } from './ProductsListScreen';
+export { default as ProductEditScreen } from './ProductEditScreen';

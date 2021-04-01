@@ -11,12 +11,17 @@ import {
   stripePayment,
   payOrder,
 } from '../redux/actions/orderActions';
-import { ORDER_PAY_RESET, STRIPE_PAYMENT_RESET } from '../redux/actions/type';
+import {
+  ORDER_PAY_RESET,
+  STRIPE_PAYMENT_RESET,
+  ORDER_DETAILS_RESET,
+} from '../redux/actions/type';
 import { resetCart } from '../redux/actions/cartActions';
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
   const dispatch = useDispatch();
+  const { user } = useSelector(state => state.userLogin);
   const { order, loading, error } = useSelector(state => state.orderDetails);
   const { success } = useSelector(state => state.orderPay);
   const {
@@ -28,13 +33,18 @@ const OrderScreen = ({ match }) => {
   const addDecimals = num => (Math.round(num * 100) / 100).toFixed(2);
 
   useEffect(() => {
-    dispatch(getOrderDetails(orderId));
-    dispatch(resetCart());
-  }, [dispatch, orderId]);
+    dispatch({ type: ORDER_DETAILS_RESET });
+    if (!user) {
+      history.push('/login');
+    } else {
+      dispatch(getOrderDetails(orderId));
+      dispatch(resetCart());
+    }
+  }, [dispatch, orderId, user, history]);
 
   useEffect(() => {
     dispatch({ type: ORDER_PAY_RESET });
-    if (!order || success) {
+    if (success) {
       dispatch(getOrderDetails(orderId));
     }
   }, [dispatch, orderId, order, success]);
@@ -182,7 +192,7 @@ const OrderScreen = ({ match }) => {
                 <Col>${order?.totalPrice}</Col>
               </Row>
             </ListGroup.Item>
-            {!order?.isPaid && (
+            {!order?.isPaid && order?.user?._id === user?._id && (
               <ListGroup.Item>
                 <StripeCheckout
                   label='Pay now'

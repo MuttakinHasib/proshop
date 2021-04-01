@@ -1,11 +1,21 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
+  PRODUCT_CREATE_FAIL,
+  PRODUCT_CREATE_REQUEST,
+  PRODUCT_CREATE_SUCCESS,
+  PRODUCT_DELETE_FAIL,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
   PRODUCT_DETAILS_FAIL,
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_LIST_FAIL,
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
+  PRODUCT_UPDATE_FAIL,
+  PRODUCT_UPDATE_REQUEST,
+  PRODUCT_UPDATE_SUCCESS,
 } from './type';
 
 export const listProducts = () => async dispatch => {
@@ -36,6 +46,89 @@ export const listProductDetails = id => async dispatch => {
   } catch (err) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const deleteProduct = id => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_DELETE_REQUEST });
+    const { user } = getState().userLogin;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    await axios.delete(`/api/products/${id}`, config);
+
+    dispatch({ type: PRODUCT_DELETE_SUCCESS });
+    toast.success('Product deleted');
+  } catch (err) {
+    dispatch({
+      type: PRODUCT_DELETE_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const createProduct = product => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_CREATE_REQUEST });
+    const { user } = getState().userLogin;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/products/`, product, config);
+
+    dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
+    toast.success('Added new product');
+  } catch (err) {
+    dispatch({
+      type: PRODUCT_CREATE_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const updateProduct = product => async (dispatch, getState) => {
+  try {
+    dispatch({ type: PRODUCT_UPDATE_REQUEST });
+    const { user } = getState().userLogin;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/products/${product._id}`,
+      product,
+      config
+    );
+
+    dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
+    toast.success('Product updated');
+  } catch (err) {
+    dispatch({
+      type: PRODUCT_UPDATE_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message

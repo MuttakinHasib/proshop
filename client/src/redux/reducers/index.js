@@ -4,10 +4,17 @@ import {
   orderCreateReducer,
   orderDetailsReducer,
   orderPayReducer,
+  OrdersListReducer,
   stripePaymentReducer,
   userOrdersListReducer,
 } from './orderReducers';
-import { productDetailsReducer, productListReducer } from './productReducers';
+import {
+  productCreateReducer,
+  productDeleteReducer,
+  productDetailsReducer,
+  productListReducer,
+  productUpdateReducer,
+} from './productReducers';
 import {
   userDeleteReducer,
   userDetailsReducer,
@@ -21,6 +28,9 @@ import {
 export default combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
@@ -32,6 +42,7 @@ export default combineReducers({
   cart: cartReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
+  ordersList: OrdersListReducer,
   stripePayment: stripePaymentReducer,
   orderPay: orderPayReducer,
 });
