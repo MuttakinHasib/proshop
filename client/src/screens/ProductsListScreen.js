@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Col, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
@@ -69,9 +70,11 @@ const ProductsListScreen = ({ history, match }) => {
           <h1>Products</h1>
         </Col>
         <Col className='text-right'>
-          <Button variant='primary' onClick={createProductHandler}>
-            <i className='fas fa-plus'></i> Create Product
-          </Button>
+          <Link to='/admin/product/create'>
+            <Button variant='primary' onClick={createProductHandler}>
+              <i className='fas fa-plus'></i> Create Product
+            </Button>
+          </Link>
         </Col>
       </Row>
       {loading && <Loader />}

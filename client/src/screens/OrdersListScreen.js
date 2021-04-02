@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
-import { Button, Col, Row, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
 import { getOrdersList } from '../redux/actions/orderActions';
-import { ORDERS_LIST_RESET } from '../redux/actions/type';
 
 const OrdersListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const { user } = useSelector(({ userLogin }) => userLogin);
-  const { success, loading, error, orders } = useSelector(
+  const { loading, error, orders } = useSelector(
     ({ ordersList }) => ordersList
   );
 
@@ -28,6 +27,7 @@ const OrdersListScreen = ({ history }) => {
 
   return (
     <>
+      {loading && <Loader />}
       <h1 className='mb-5'>All orders List</h1>
       <Table hover bordered responsive className='table-sm text-center'>
         <thead>

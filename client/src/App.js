@@ -13,6 +13,7 @@ import {
   OrderScreen,
   PaymentScreen,
   PlaceOrderScreen,
+  ProductCreateScreen,
   ProductEditScreen,
   ProductScreen,
   ProductsListScreen,
@@ -53,6 +54,11 @@ const App = () => {
               exact
               path='/admin/user/:id/edit'
               component={UserEditScreen}
+            />
+            <Route
+              exact
+              path='/admin/product/create'
+              component={ProductCreateScreen}
             />
             <Route
               exact

@@ -9,7 +9,7 @@ import { deleteUser, usersList } from '../redux/actions/userActions';
 
 const UserListScreen = ({ history }) => {
   const dispatch = useDispatch();
-  const { error, loading, users } = useSelector(({ usersList }) => usersList);
+  const { loading, users } = useSelector(({ usersList }) => usersList);
   const { user } = useSelector(({ userLogin }) => userLogin);
   const { success: deleteSuccess } = useSelector(
     ({ userDelete }) => userDelete

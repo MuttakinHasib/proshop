@@ -3,6 +3,7 @@ import { Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
+import Meta from '../components/Meta';
 import Paginate from '../components/Paginate';
 import Product from '../components/Product';
 // import { products } from '../data';
@@ -21,10 +22,11 @@ const HomeScreen = ({ match }) => {
 
   return (
     <>
+      <Meta />
       {loading && <Loader />}
       {error && toast.error(error)}
       <h1>Latest Products</h1>
-      <Row className="mb-5" >
+      <Row className='mb-5'>
         {products.map(product => (
           <Col key={product._id} sm={12} md={6} lg={4}>
             <Product {...{ product }} />

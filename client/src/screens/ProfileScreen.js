@@ -109,7 +109,6 @@ const ProfileScreen = ({ history, location }) => {
           </Alert>
         ) : (
           <Table
-            striped
             bordered
             hover
             responsive
@@ -133,28 +132,24 @@ const ProfileScreen = ({ history, location }) => {
                   <td>${order.totalPrice}</td>
                   <td>
                     {order.isPaid ? (
-                      <>
-                        <i
-                          className='fas fa-check'
-                          style={{ color: 'green' }}
-                        ></i>{' '}
-                        {order.paidAt.substring(0, 10)}
-                      </>
+                      <Alert variant='success'>
+                        <h6 className='mb-0'>Paid</h6>
+                      </Alert>
                     ) : (
-                      <i className='fas fa-times' style={{ color: '#f36' }}></i>
+                      <Alert variant='danger'>
+                        <h6 className='mb-0'>Not Paid</h6>
+                      </Alert>
                     )}
                   </td>
                   <td>
                     {order.isDelivered ? (
-                      <>
-                        <i
-                          className='fas fa-check'
-                          style={{ color: 'green' }}
-                        ></i>{' '}
-                        {order.deliveredAt.substring(0, 10)}
-                      </>
+                      <Alert variant='success'>
+                        <h6 className='mb-0'>Delivered</h6>
+                      </Alert>
                     ) : (
-                      <i className='fas fa-times' style={{ color: '#f36' }}></i>
+                      <Alert variant='danger'>
+                        <h6 className='mb-0'>Not Delivered</h6>
+                      </Alert>
                     )}
                   </td>
                   <td>

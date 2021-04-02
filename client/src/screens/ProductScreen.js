@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
+import Meta from '../components/Meta';
 import Rating from '../components/Rating';
 import {
   createProductReview,
@@ -59,6 +60,7 @@ const ProductScreen = ({ match, history }) => {
         <Loader />
       ) : (
         <>
+          <Meta title={product?.name} />
           <Link className='btn btn-light my-3' to='/'>
             Go Back
           </Link>
