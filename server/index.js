@@ -9,12 +9,15 @@ import orderRoutes from './routes/order.js';
 import uploadRoutes from './routes/upload.js';
 import { errorHandler, notFound } from './middleware/error.js';
 import morgan from 'morgan';
+import cors from 'cors';
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
+
+app.use(cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

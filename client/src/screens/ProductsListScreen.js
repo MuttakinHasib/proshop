@@ -4,16 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader';
+import Paginate from '../components/Paginate';
 import { deleteProduct, listProducts } from '../redux/actions/productActions';
 import {
   PRODUCT_CREATE_RESET,
   PRODUCT_DELETE_RESET,
 } from '../redux/actions/type';
 
-const ProductsListScreen = ({ history }) => {
+const ProductsListScreen = ({ history, match }) => {
+  const pageNumber = match.params.pageNumber || 1;
   const dispatch = useDispatch();
-  
-  const { error, loading, products } = useSelector(
+
+  const { error, loading, products, page, pages } = useSelector(
     ({ productList }) => productList
   );
   const { user } = useSelector(({ userLogin }) => userLogin);
@@ -39,7 +41,7 @@ const ProductsListScreen = ({ history }) => {
     if (productCreateSuccess) {
       history.push(`/admin/product/${productCreate._id}/edit`);
     } else {
-      dispatch(listProducts());
+      dispatch(listProducts('', pageNumber));
       dispatch({ type: PRODUCT_DELETE_RESET });
     }
   }, [
@@ -49,6 +51,7 @@ const ProductsListScreen = ({ history }) => {
     productDeleteSuccess,
     productCreateSuccess,
     productCreate,
+    pageNumber,
   ]);
 
   const deleteHandler = id => {
@@ -108,6 +111,7 @@ const ProductsListScreen = ({ history }) => {
           ))}
         </tbody>
       </Table>
+      <Paginate isAdmin {...{ page, pages }} />
     </>
   );
 };

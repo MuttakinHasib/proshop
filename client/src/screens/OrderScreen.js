@@ -26,7 +26,7 @@ const OrderScreen = ({ match, history }) => {
   const { user } = useSelector(state => state.userLogin);
   const { order, loading, error } = useSelector(state => state.orderDetails);
   const { success } = useSelector(state => state.orderPay);
-  const { success: deliveredSuccess } = useSelector(
+  const { success: deliveredSuccess, loading: deliveredLoading } = useSelector(
     state => state.orderDeliver
   );
   const {
@@ -86,6 +86,7 @@ const OrderScreen = ({ match, history }) => {
     toast.error(error)
   ) : (
     <>
+      {deliveredLoading && <Loader />}
       <h1 className='text-center mb-5 text-warning'>Order No #{order._id}</h1>
       {/* <CheckoutSteps step1 step2 step3 step4 /> */}
       <Row>

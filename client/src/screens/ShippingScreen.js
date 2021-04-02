@@ -35,6 +35,16 @@ const ShippingScreen = ({ history }) => {
               placeholder='Enter Address'
             ></Form.Control>
           </Form.Group>
+          <Form.Group controlId='telephone'>
+            <Form.Label>Mobile No</Form.Label>
+            <Form.Control
+              type='text'
+              name='telephone'
+              defaultValue={shippingAddress?.telephone}
+              ref={register({ required: true })}
+              placeholder='Enter mobile number'
+            ></Form.Control>
+          </Form.Group>
           <Form.Group controlId='city'>
             <Form.Label>City</Form.Label>
             <Form.Control
