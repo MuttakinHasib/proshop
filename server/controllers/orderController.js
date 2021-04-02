@@ -42,8 +42,12 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     const createdOrder = await order.save();
 
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      // service: 'gmail',
+      // host: 'smtp.gmail.com',
       host: 'smtp.gmail.com',
+      port: 587,
+      ignoreTLS: false,
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
@@ -125,8 +129,12 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
 
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      // service: 'gmail',
+      // host: 'smtp.gmail.com',
       host: 'smtp.gmail.com',
+      port: 587,
+      ignoreTLS: false,
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
@@ -173,8 +181,12 @@ export const updateOrderToDeliver = asyncHandler(async (req, res) => {
     const updatedOrder = await order.save();
 
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      // service: 'gmail',
+      // host: 'smtp.gmail.com',
       host: 'smtp.gmail.com',
+      port: 587,
+      ignoreTLS: false,
+      secure: false,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
