@@ -24,11 +24,13 @@ import {
   UserListScreen,
 } from './screens';
 import OrdersListScreen from './screens/OrdersListScreen';
+import Meta from './components/Meta';
 
 const App = () => {
   return (
     <Router>
       <Header />
+      <Meta />
       <main>
         <Container>
           <Switch>
