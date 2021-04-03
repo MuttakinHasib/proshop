@@ -90,7 +90,12 @@ const OrderScreen = ({ match, history }) => {
     <>
       {orderPayLoading && <Loader />}
       {deliveredLoading && <Loader />}
-      <h1 className='text-center mb-5 text-warning'>Order No #{order._id}</h1>
+      <h1
+        className='text-center mb-5 text-success'
+        style={{ wordBreak: 'break-all' }}
+      >
+        Order No #{order._id}
+      </h1>
       {/* <CheckoutSteps step1 step2 step3 step4 /> */}
       <Row>
         <Col md={8}>
