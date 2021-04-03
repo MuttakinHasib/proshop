@@ -44,9 +44,8 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     let transporter = nodemailer.createTransport({
       // service: 'gmail',
       // host: 'smtp.gmail.com',
-      host: 'smtp.gmail.com',
+      host: 'smtp.hasib.tech',
       port: 587,
-      ignoreTLS: false,
       secure: false,
       auth: {
         user: process.env.MAIL_USER,
@@ -131,9 +130,8 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     let transporter = nodemailer.createTransport({
       // service: 'gmail',
       // host: 'smtp.gmail.com',
-      host: 'smtp.gmail.com',
+      host: 'smtp.hasib.tech',
       port: 587,
-      ignoreTLS: false,
       secure: false,
       auth: {
         user: process.env.MAIL_USER,
@@ -183,9 +181,8 @@ export const updateOrderToDeliver = asyncHandler(async (req, res) => {
     let transporter = nodemailer.createTransport({
       // service: 'gmail',
       // host: 'smtp.gmail.com',
-      host: 'smtp.gmail.com',
+      host: 'smtp.hasib.tech',
       port: 587,
-      ignoreTLS: false,
       secure: false,
       auth: {
         user: process.env.MAIL_USER,
