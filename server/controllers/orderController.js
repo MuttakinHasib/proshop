@@ -4,8 +4,25 @@ import asyncHandler from 'express-async-handler';
 import nodemailer from 'nodemailer';
 import Order from '../models/Order.js';
 import { orderTables } from '../utils/document.js';
+import { google } from 'googleapis';
 
 // const secretKey = process.env.STRIPE_SECRET;
+
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL;
+const REFRESH_TOKEN =
+  '1//045Xbdlx9LJPHCgYIARAAGAQSNwF-L9Ir81ICmH-GYACwheeXLUfLHwRkETjFRLdwf87iCQ05VrxCktIdvAAIERccaQo76C0qz28';
+
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URL
+);
+
+oAuth2Client.setCredentials({
+  refresh_token: REFRESH_TOKEN,
+});
 
 const stripe = new Stripe(
   `sk_test_51IZiatGtB6p6nHNadpInK46iOYnMTFnmIvM0E4rXaYd6NorelcsNW8JGjdkTzHLXPfu9SCgphsF0Q77YFiDjbMPP00XD1BDUuV`
@@ -41,15 +58,18 @@ export const addOrderItems = asyncHandler(async (req, res) => {
 
     const createdOrder = await order.save();
 
+    // const accessToken = await oAuth2Client.getAccessToken();
+    // console.log(accessToken);
     let transporter = nodemailer.createTransport({
-      // service: 'gmail',
-      // host: 'smtp.gmail.com',
-      host: 'smtp.hasib.tech',
-      port: 587,
-      secure: false,
+      service: 'gmail',
       auth: {
+        type: 'OAuth2',
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: process.env.GOOGLE_ACCESS_TOKEN,
+        expires: 1262565265693626444515 + 600000,
       },
     });
 
@@ -66,6 +86,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
         ${orderTables(createdOrder, req)}
       `,
     });
+
     res.status(201).json(createdOrder);
   }
 });
@@ -127,15 +148,18 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
 
     const updatedOrder = await order.save();
 
+    const accessToken = await oAuth2Client.getAccessToken();
+
     let transporter = nodemailer.createTransport({
-      // service: 'gmail',
-      // host: 'smtp.gmail.com',
-      host: 'smtp.hasib.tech',
-      port: 587,
-      secure: false,
+      service: 'gmail',
       auth: {
+        type: 'OAuth2',
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: process.env.GOOGLE_ACCESS_TOKEN,
+        expires: 1262565265693626444515 + 600000,
       },
     });
 
@@ -178,15 +202,18 @@ export const updateOrderToDeliver = asyncHandler(async (req, res) => {
 
     const updatedOrder = await order.save();
 
+    const accessToken = await oAuth2Client.getAccessToken();
+
     let transporter = nodemailer.createTransport({
-      // service: 'gmail',
-      // host: 'smtp.gmail.com',
-      host: 'smtp.hasib.tech',
-      port: 587,
-      secure: false,
+      service: 'gmail',
       auth: {
+        type: 'OAuth2',
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: REFRESH_TOKEN,
+        accessToken: process.env.GOOGLE_ACCESS_TOKEN,
+        expires: 1262565265693626444515 + 600000,
       },
     });
 
