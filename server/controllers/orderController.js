@@ -61,7 +61,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
     // const accessToken = await oAuth2Client.getAccessToken();
     // console.log(accessToken);
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: 'Gmail',
       auth: {
         type: 'OAuth2',
         user: process.env.MAIL_USER,
@@ -69,7 +69,7 @@ export const addOrderItems = asyncHandler(async (req, res) => {
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
         accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-        expires: 1262565265693626444515 + 600000,
+        expires: 1262565265693626444515 * 600000,
       },
     });
 
@@ -151,7 +151,7 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     const accessToken = await oAuth2Client.getAccessToken();
 
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: 'Gmail',
       auth: {
         type: 'OAuth2',
         user: process.env.MAIL_USER,
@@ -159,7 +159,7 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
         accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-        expires: 1262565265693626444515 + 600000,
+        expires: 1262565265693626444515 * 600000,
       },
     });
 
@@ -205,7 +205,7 @@ export const updateOrderToDeliver = asyncHandler(async (req, res) => {
     const accessToken = await oAuth2Client.getAccessToken();
 
     let transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: 'Gmail',
       auth: {
         type: 'OAuth2',
         user: process.env.MAIL_USER,
@@ -213,7 +213,7 @@ export const updateOrderToDeliver = asyncHandler(async (req, res) => {
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
         accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-        expires: 1262565265693626444515 + 600000,
+        expires: 1262565265693626444515 * 600000,
       },
     });
 
