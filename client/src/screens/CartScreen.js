@@ -52,14 +52,14 @@ const CartScreen = ({ match, location, history }) => {
             {cartItems.map(item => (
               <ListGroup.Item key={item.product}>
                 <Row>
-                  <Col md={2}>
+                  <Col md={2} className='my-3'>
                     <Image src={item?.image} alt={item.name} fluid rounded />
                   </Col>
-                  <Col md={3}>
+                  <Col md={3} className='my-3'>
                     <Link to={`/product/${item.product}`}>{item?.name}</Link>
                   </Col>
                   <Col>{item?.price}</Col>
-                  <Col md={3}>
+                  <Col md={3} className='my-3'>
                     {item?.countInStock > 0 && (
                       <Form.Control
                         as='select'

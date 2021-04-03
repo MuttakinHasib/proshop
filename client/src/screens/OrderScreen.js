@@ -161,15 +161,15 @@ const OrderScreen = ({ match, history }) => {
                   {order?.orderItems.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
-                        <Col md={1}>
+                        <Col md={1} className='my-3'>
                           <Image src={item.image} alt='' fluid rounded />
                         </Col>
-                        <Col>
+                        <Col className='my-3'>
                           <Link to={`/product/${item.product}`}>
                             {item.name}
                           </Link>
                         </Col>
-                        <Col md={4}>
+                        <Col md={4} className='my-3'>
                           <h6>
                             {item.quantity} X ${item.price} = $
                             {addDecimals(item.quantity * item.price)}
@@ -183,7 +183,7 @@ const OrderScreen = ({ match, history }) => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}>
+        <Col md={4} className='my-3'>
           <ListGroup>
             <ListGroup.Item>
               <h3 className='text-center mb-0'>Order Summary</h3>

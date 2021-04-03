@@ -48,7 +48,7 @@ const ProfileScreen = ({ history, location }) => {
 
   return (
     <Row>
-      <Col md={3}>
+      <Col md={3} className='my-3'>
         <h1>Dashboard</h1>
         {loading && <Loader />}
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -95,7 +95,7 @@ const ProfileScreen = ({ history, location }) => {
           </Button>
         </Form>
       </Col>
-      <Col md={9}>
+      <Col md={9} className='my-3'>
         <h2>My Orders</h2>
         {loadingOrders ? (
           <Loader />

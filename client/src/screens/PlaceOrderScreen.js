@@ -58,7 +58,7 @@ const PlaceOrderScreen = ({ history }) => {
       {loading && <Loader />}
       <CheckoutSteps step1 step2 step3 step4 />
       <Row>
-        <Col md={8}>
+        <Col md={8} className='my-3'>
           <ListGroup variant='flush'>
             <ListGroup.Item>
               <h2>Shipping</h2>
@@ -122,7 +122,7 @@ const PlaceOrderScreen = ({ history }) => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}>
+        <Col md={4} className='my-3'>
           <ListGroup>
             <ListGroup.Item>
               <h3 className='text-center mb-0'>Order Summary</h3>
